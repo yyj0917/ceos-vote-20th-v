@@ -1,4 +1,4 @@
-# react-vote-20th
+# next-vote-20th
 
 ## **서론**
 

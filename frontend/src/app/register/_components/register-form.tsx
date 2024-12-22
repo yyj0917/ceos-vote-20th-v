@@ -1,9 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { useForm, SubmitHandler } from "react-hook-form"
-import RegisterAlert from "./register-alert"
 import Header from "@/components/header"
 import { Button } from "@/components/button"
 import { SelectBox } from "./select-box"
@@ -25,7 +23,7 @@ export default function RegisterForm() {
         {
             type: "id",
             name: "ID",
-            placeholder: "Enter your email",
+            placeholder: "Enter your ID",
         },
         {
             type: "password",
@@ -66,15 +64,8 @@ export default function RegisterForm() {
     }
 
     return (
-        <div className="w-full h-full flex flex-col gap-10">
-            {/* Alert 컴포넌트 */}
-            {/* {error && (
-                <Alert variant="destructive" className="mb-4">
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-                </Alert>
-            )}
-            <RegisterAlert/> */}
+        <div className="w-full h-full flex flex-col gap-12">
+            {/* Header */}
             <Header title="Register" />
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -91,7 +82,7 @@ export default function RegisterForm() {
                         />
                     </div>
                 ))}
-                <div className="flex flex-col gap-2">
+                <div className=" flex flex-col gap-2">
                     <label className="text-body1 text-grey450">Team / Part</label>
                     <div className="relative flex gap-10">
                         <SelectBox title={"Team"} placeholder={"Team"} items={selectItemTeam} />
@@ -103,7 +94,7 @@ export default function RegisterForm() {
                     variant={"primary"}
                     className="w-full p-2 text-white hover:bg-grey750"
                 >
-                Submit
+                    Sign up
                 </Button>
             </form>
         </div>

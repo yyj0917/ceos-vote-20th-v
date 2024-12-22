@@ -64,29 +64,31 @@ export default function RegisterForm() {
     }
 
     return (
-        <div className="w-full h-full flex flex-col gap-12">
+        <div className="w-full h-full flex flex-col gap-10">
             {/* Header */}
             <Header title="Register" />
             {/* Form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                {inputType.map((input, index) => (
-                    <div key={index} className="flex flex-col gap-2">
-                        <label className="text-body1 text-grey450">{input.name}</label>
-                        <input
-                            {...register("password", { required: true })}
-                            key={input.name}
-                            type={input.type}
-                            name={input.name}
-                            placeholder={input.placeholder}
-                            className="px-1 py-2 w-full border-b-2 border-grey550 bg-inherit focus:outline-none focus:ring-0 focus:border-white focus:placeholder-transparent "
-                        />
-                    </div>
-                ))}
-                <div className=" flex flex-col gap-2">
-                    <label className="text-body1 text-grey450">Team / Part</label>
-                    <div className="relative flex gap-10">
-                        <SelectBox title={"Team"} placeholder={"Team"} items={selectItemTeam} />
-                        <SelectBox title={"Part"} placeholder={"Part"} items={selectItemPart} />
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
+                <div className="space-y-4">
+                    {inputType.map((input, index) => (
+                        <div key={index} className="flex flex-col gap-2">
+                            <label className="text-body1 text-grey450">{input.name}</label>
+                            <input
+                                {...register("password", { required: true })}
+                                key={input.name}
+                                type={input.type}
+                                name={input.name}
+                                placeholder={input.placeholder}
+                                className="px-1 py-2 w-full border-b-2 border-grey550 bg-inherit focus:outline-none focus:ring-0 focus:border-white focus:placeholder-transparent "
+                            />
+                        </div>
+                    ))}
+                    <div className="flex flex-col gap-2">
+                        <label className="text-body1 text-grey450">Team / Part</label>
+                        <div className="relative flex gap-10">
+                            <SelectBox title={"Team"} placeholder={"Team"} items={selectItemTeam} />
+                            <SelectBox title={"Part"} placeholder={"Part"} items={selectItemPart} />
+                        </div>
                     </div>
                 </div>
                 <Button

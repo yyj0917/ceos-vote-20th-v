@@ -25,8 +25,8 @@ export default function RootLayout({
         />
       </head>
       {/* 데스크탑 & 태블릿에서는 375px 고정, 모바일에서는 폰 화면에 따라 조정 */}
-      <body className="h-[100vh] min-w-[360px] max-w-[415px] lg:max-w-[375px] mx-auto bg-white">
-        <main className="w-full h-full bg-grey1000">
+      <body className="h-[100vh] flex justify-center items-center  bg-white">
+        <main className="min-w-[360px] max-w-[415px] lg:max-w-[375px] h-full bg-grey1000">
           {children}
         </main>
       </body>

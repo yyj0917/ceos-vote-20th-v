@@ -15,10 +15,10 @@ export default function Home() {
         <Vote size={40}/>
       </span>
       <section className='w-full'>
-        <Button variant={'primary'} className='w-full hover:bg-grey850'>
+        <Button variant={'primary'} className='w-full text-grey350 hover:bg-grey850'>
           <Link href='/login'>Join us</Link>
         </Button>
-        <Button variant={'link'} className='w-full mt-2 hover:underline hover:text-underline-offset-2'>
+        <Button variant={'link'} className='w-full mt-2 text-grey350 hover:underline'>
           <Link href='/register'>Sign up as a member</Link>
         </Button>
       </section>

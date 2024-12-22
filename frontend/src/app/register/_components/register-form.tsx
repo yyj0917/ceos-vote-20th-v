@@ -78,7 +78,7 @@ export default function RegisterForm() {
                             type={input.type}
                             name={input.name}
                             placeholder={input.placeholder}
-                            className="px-1 py-2 w-full border-b-2 border-grey550 bg-inherit"
+                            className="px-1 py-2 w-full border-b-2 border-grey550 bg-inherit focus:outline-none focus:ring-0 focus:border-white focus:placeholder-transparent "
                         />
                     </div>
                 ))}
@@ -92,7 +92,7 @@ export default function RegisterForm() {
                 <Button
                     type="submit"
                     variant={"primary"}
-                    className="w-full p-2 text-white hover:bg-grey750"
+                    className="w-full p-2 text-grey350 hover:bg-grey750"
                 >
                     Sign up
                 </Button>

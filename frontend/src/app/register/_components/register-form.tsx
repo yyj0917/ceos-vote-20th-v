@@ -13,6 +13,7 @@ interface FormValues {
   confirmPassword: string
 }
 
+
 export default function RegisterForm() {
     const inputType = [
         {

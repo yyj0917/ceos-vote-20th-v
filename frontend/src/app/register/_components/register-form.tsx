@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, SubmitHandler, useController } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, RegisterSchema } from "@/lib/zod/schema";
 
@@ -9,12 +9,6 @@ import Header from "@/components/header"
 import { Button } from "@/components/button"
 import { SelectBox } from "./select-box"
 
-interface FormValues {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
-}
 
 export default function RegisterForm() {
     const inputType = [
@@ -54,6 +48,7 @@ export default function RegisterForm() {
     const [error, setError] = useState<string | null>(null);
     // React Hook Form - zodResolver
     const {
+        control,
         register,
         handleSubmit,
         reset,
@@ -61,6 +56,26 @@ export default function RegisterForm() {
     } = useForm<RegisterSchema>({
         resolver: zodResolver(registerSchema),
         mode: "onSubmit", 
+    });
+
+    // team 필드 제어 - custom component 별도 제어
+    const {
+        field: teamField,
+        fieldState: { error: teamError },
+    } = useController({
+        name: "team",
+        control,
+        rules: { required: "팀을 선택하세요" },
+    });
+
+    // part 필드 제어 - custom component 별도 제어
+    const {
+        field: partField,
+        fieldState: { error: partError },
+    } = useController({
+        name: "part",
+        control,
+        rules: { required: "파트를 선택하세요" },
     });
 
     // 폼 제출 시 호출
@@ -107,8 +122,18 @@ export default function RegisterForm() {
                     <div className="flex flex-col gap-2">
                         <label className="text-body1 text-grey450">Team / Part</label>
                         <div className="relative flex gap-10">
-                            <SelectBox title={"Team"} placeholder={"Team"} items={selectItemTeam} />
-                            <SelectBox title={"Part"} placeholder={"Part"} items={selectItemPart} />
+                            <SelectBox
+                                value={teamField.value}
+                                onValueChange={teamField.onChange}
+                                placeholder={"Team"} items={selectItemTeam} />
+                            {/* {teamError && <p style={{ color: "red" }}>{teamError.message}</p>} */}
+
+                            <SelectBox
+                                value={partField.value}
+                                onValueChange={partField.onChange}
+                                placeholder={"Part"} items={selectItemPart} />
+                            {/* {partError && <p style={{ color: "red" }}>{partError.message}</p>} */}
+
                         </div>
                     </div>
                 </div>

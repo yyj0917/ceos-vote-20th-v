@@ -14,6 +14,8 @@ export const registerSchema = z
       .string()
       .nonempty("이메일을 입력하세요.")
       .email("유효한 이메일 주소가 아닙니다."),
+    team: z.string().nonempty("팀을 선택하세요."),
+    part: z.string().nonempty("Part를 선택하세요."),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "비밀번호가 일치하지 않습니다.",

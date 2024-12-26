@@ -7,12 +7,12 @@ export default function Vote() {
         {
             title: "파트장 투표",
             icon: <Heart size={36} className="hover:text-newRed"/>,
-            link: "/vote/part"
+            link: "/main/vote/part"
         },
         {
             title: "데모데이 투표",
             icon: <Heart size={36} className="hover:text-newRed"/>,
-            link: "/vote/demoday"
+            link: "/main/vote/demoday"
         }
     ]
 
@@ -21,7 +21,7 @@ export default function Vote() {
             <header className="py-6 w-full text-center text-logo text-grey450 border-b-4 border-grey450">파트장 / 데모데이 투표</header>
             <section className="absolute top-[40%] w-full flex flex-col items-center gap-20">
                 {voteArray.map((vote, index) => (
-                    <div key={index} className="px-10 py-4 w-full flex justify-between items-center text-logo text-grey450 shadow-md  shadow-newRed">
+                    <div key={index} className="px-10 py-4 w-full flex justify-between items-center text-logo text-grey450 border-b-2 border-newRed">
                         <h1>{vote.title}</h1>
                         <Link href={vote.link}>
                             {vote.icon}

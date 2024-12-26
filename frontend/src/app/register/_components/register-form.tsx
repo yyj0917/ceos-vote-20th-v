@@ -2,6 +2,9 @@
 
 import React, { useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema, RegisterSchema } from "@/lib/zod/schema";
+
 import Header from "@/components/header"
 import { Button } from "@/components/button"
 import { SelectBox } from "./select-box"
@@ -17,51 +20,64 @@ export default function RegisterForm() {
     const inputType = [
         {
             type: "text",
-            name: "Name",
+            name: "name",
             placeholder: "Enter your name",
+            title: "Name",
         },
         {
-            type: "id",
+            type: "text",
             name: "ID",
             placeholder: "Enter your ID",
+            title : "ID",
         },
         {
             type: "password",
-            name: "Password",
+            name: "password",
             placeholder: "Enter your password",
+            title: "Password",
         },
         {
             type: "password",
-            name: "Password Confirm",
+            name: "confirmPassword",
             placeholder: "Confirm your password",
+            title: "Confirm Password",
         },
         {
             type: "email",
-            name: "Email",
+            name: "email",
             placeholder: "Enter your email",
+            title: "Email",
         },
     ];
     const selectItemTeam = ["MUSAI", "CakeWay", "CoffeeDeal", "PhotoGround", "AngelBridge"];
     const selectItemPart = ["기획", "디자인", "프론트엔드", "백엔드"];
     const [error, setError] = useState<string | null>(null);
-    const { register, handleSubmit, reset, watch } = useForm<FormValues>();
+    // React Hook Form - zodResolver
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<RegisterSchema>({
+        resolver: zodResolver(registerSchema),
+        mode: "onSubmit", 
+    });
 
-    const onSubmit: SubmitHandler<FormValues> = (data) => {
-        if (data.password !== data.confirmPassword) {
-        // 비밀번호가 일치하지 않을 경우 오류 메시지를 표시
-        setError("Passwords do not match!")
-        return
-        }
-
-        // 오류가 없을 경우 API 호출 (추후 백엔드 연결)
-        try {
+    // 폼 제출 시 호출
+    const onSubmit: SubmitHandler<RegisterSchema> = (data) => {
         console.log("Form submitted successfully:", data)
-        setError(null) // 오류 상태 초기화
-        reset() // 폼 리셋
+        try {
+            console.log("Form submitted successfully:", data);
+            alert("회원가입 완료!"); // 실제로는 여기서 API POST 요청 등 백엔드와 연동
+            // api 요청 로직.
+            setError(null);
+            reset();
+            // /main 다이렉트 이동 로직
         } catch (err) {
-        setError("An unexpected error occurred. Please try again.")
+            console.error(err);
+            setError("에러가 발생했습니다. 다시 시도해주세요.");
         }
-    }
+    };
 
     return (
         <div className="w-full h-full flex flex-col gap-10">
@@ -72,15 +88,20 @@ export default function RegisterForm() {
                 <div className="space-y-4">
                     {inputType.map((input, index) => (
                         <div key={index} className="flex flex-col gap-2">
-                            <label className="text-body1 text-grey450">{input.name}</label>
+                            <label className="text-body1 text-grey450">{input.title}</label>
                             <input
-                                {...register("password", { required: true })}
-                                key={input.name}
+                                {...register(input.name as keyof RegisterSchema)}
                                 type={input.type}
-                                name={input.name}
                                 placeholder={input.placeholder}
+                                autoComplete="off"
                                 className="px-1 py-2 w-full border-b-2 border-grey550 bg-inherit focus:outline-none focus:ring-0 focus:border-white focus:placeholder-transparent "
                             />
+                            {/* 에러 메시지 */}
+                            {errors[input.name as keyof RegisterSchema] && (
+                                <p className="text-newRed text-sm">
+                                {errors[input.name as keyof RegisterSchema]?.message as string}
+                                </p>
+                            )}
                         </div>
                     ))}
                     <div className="flex flex-col gap-2">

@@ -11,6 +11,10 @@ module.exports= {
 ],
 theme: {
 	extend: {
+    boxShadow: {
+      bottom: '0 4px 6px rgba(0, 0, 0, 0.1)', // 아래쪽만 그림자
+      bottomNewRed: '0 4px 6px rgba(255, 87, 51, 0.5)', // 아래쪽만 newRed
+    },
 		colors: {
 			black: '#0C0D11',
 			ivory: '#E9E7E1',

@@ -6,6 +6,7 @@ import Header from "@/components/header"
 import { Button } from "@/components/button"
 import { LoginSchema, loginSchema } from "@/lib/zod/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoginAPI } from "@/lib/api/auth"
 
 interface FormValues {
   name: string
@@ -18,7 +19,7 @@ export default function LoginForm() {
     const inputType = [
         {
             type: "text",
-            name: "ID",
+            name: "username",
             placeholder: "Enter your ID",
             title: "ID",
         },
@@ -43,12 +44,9 @@ export default function LoginForm() {
     });
 
     // 폼 제출 시 호출
-    const onSubmit: SubmitHandler<LoginSchema> = (data) => {
-        console.log("login submitted successfully:", data)
+    const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
         try {
-            console.log("Form submitted successfully:", data);
-            alert("로그인 완료!"); // 실제로는 여기서 API POST 요청 등 백엔드와 연동
-            // api 요청 로직.
+            const response = await LoginAPI(data.username, data.password);
             setError(null);
             reset();
             // /main 다이렉트 이동 로직
@@ -73,7 +71,7 @@ export default function LoginForm() {
                                 type={input.type}
                                 placeholder={input.placeholder}
                                 autoComplete="off"
-                                className="px-1 py-2 w-full border-b-2 border-grey550 bg-inherit focus:outline-none focus:ring-0 focus:border-white focus:placeholder-transparent "
+                                className="px-1 py-2 w-full text-grey450 border-b-2 border-grey550 bg-inherit focus:outline-none focus:ring-0 focus:border-white focus:placeholder-transparent "
                             />
                             {/* 에러 메시지 */}
                             {errors[input.name as keyof LoginSchema] && (
@@ -89,7 +87,7 @@ export default function LoginForm() {
                     variant={"primary"}
                     className="w-full p-2 text-white hover:bg-grey750"
                 >
-                    Sign up
+                    Sign In
                 </Button>
             </form>
         </div>

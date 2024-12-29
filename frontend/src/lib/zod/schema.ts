@@ -3,8 +3,8 @@ import { z } from "zod";
 // 회원가입 폼 스키마
 export const registerSchema = z
   .object({
-    name: z.string().nonempty("이름을 입력하세요."),
-    ID: z.string().nonempty("ID를 입력하세요."),
+    username: z.string().nonempty("이름을 입력하세요."),
+    loginId: z.string().nonempty("ID를 입력하세요."),
     password: z
       .string()
       .nonempty("비밀번호를 입력하세요.")
@@ -27,7 +27,7 @@ export type RegisterSchema = z.infer<typeof registerSchema>;
 // 로그인 폼 스키마
 export const loginSchema = z
     .object({
-        ID: z.string().nonempty("ID를 입력하세요."),
+        username: z.string().nonempty("ID를 입력하세요."),
         password: z.string().nonempty("비밀번호를 입력하세요."),
     });
 

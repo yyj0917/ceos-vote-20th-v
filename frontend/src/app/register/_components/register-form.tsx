@@ -1,68 +1,140 @@
 "use client"
 
-import React, { useState } from "react"
-import { useForm, SubmitHandler } from "react-hook-form"
+import React, { useEffect, useState } from "react"
+import { useForm, SubmitHandler, useController } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema, RegisterSchema } from "@/lib/zod/schema";
+
 import Header from "@/components/header"
 import { Button } from "@/components/button"
 import { SelectBox } from "./select-box"
+import { RegisterAPI } from "@/lib/api/auth";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
 
-interface FormValues {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
-}
 
 
 export default function RegisterForm() {
     const inputType = [
         {
             type: "text",
-            name: "Name",
+            name: "username",
             placeholder: "Enter your name",
+            title: "Name",
         },
         {
-            type: "id",
-            name: "ID",
+            type: "text",
+            name: "loginId",
             placeholder: "Enter your ID",
+            title : "ID",
         },
         {
             type: "password",
-            name: "Password",
+            name: "password",
             placeholder: "Enter your password",
+            title: "Password",
         },
         {
             type: "password",
-            name: "Password Confirm",
+            name: "confirmPassword",
             placeholder: "Confirm your password",
+            title: "Confirm Password",
         },
         {
             type: "email",
-            name: "Email",
+            name: "email",
             placeholder: "Enter your email",
+            title: "Email",
         },
     ];
-    const selectItemTeam = ["MUSAI", "CakeWay", "CoffeeDeal", "PhotoGround", "AngelBridge"];
-    const selectItemPart = ["기획", "디자인", "프론트엔드", "백엔드"];
+    const selectItemTeam = ["PHOTO_GROUND", "CAKE_WAY", "COFFEE_DEAL", "PEDAL_GENIE", "ANGEL_BRIDGE"];
+    const selectItemPart = ["FRONT", "BACK"];
     const [error, setError] = useState<string | null>(null);
-    const { register, handleSubmit, reset, watch } = useForm<FormValues>();
+    const { toast } = useToast(); // useToast 훅 사용
 
-    const onSubmit: SubmitHandler<FormValues> = (data) => {
-        if (data.password !== data.confirmPassword) {
-        // 비밀번호가 일치하지 않을 경우 오류 메시지를 표시
-        setError("Passwords do not match!")
-        return
-        }
+    // useEffect(() => {
+    //     if (error) {
+    //       toast({
+    //         variant: "destructive",
+    //         title: "Error",
+    //         description: error,
+    //         action: <ToastAction altText="Try again">{error}</ToastAction>,
+    //       });
+    //     }
+    //   }, [error, toast]);
 
-        // 오류가 없을 경우 API 호출 (추후 백엔드 연결)
+    // React Hook Form - zodResolver
+    const {
+        control,
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<RegisterSchema>({
+        resolver: zodResolver(registerSchema),
+        mode: "onSubmit", 
+    });
+
+    // team 필드 제어 - custom component 별도 제어
+    const {
+        field: teamField,
+        fieldState: { error: teamError },
+    } = useController({
+        name: "team",
+        control,
+        rules: { required: "팀을 선택하세요" },
+    });
+
+    // part 필드 제어 - custom component 별도 제어
+    const {
+        field: partField,
+        fieldState: { error: partError },
+    } = useController({
+        name: "part",
+        control,
+        rules: { required: "파트를 선택하세요" },
+    });
+
+    // 폼 제출 시 호출
+    const onSubmit: SubmitHandler<RegisterSchema> = async (data) => {
+
+        const requestPayload = {
+            loginId: data.loginId,
+            password: data.password,
+            email: data.email,
+            username: data.username,
+            part: data.part,  // 동일하면 그대로 전달
+            team: data.team,  // 동일하면 그대로 전달
+          };
         try {
-        console.log("Form submitted successfully:", data)
-        setError(null) // 오류 상태 초기화
-        reset() // 폼 리셋
+            const response = await RegisterAPI(requestPayload);
+
+            // api 요청 로직.
+            setError(null);
+            reset();
+            alert("회원가입이 완료되었습니다.");
+            window.location.href = "/";
+            // /main 다이렉트 이동 로직
         } catch (err) {
-        setError("An unexpected error occurred. Please try again.")
+            if (axios.isAxiosError(err)) {
+                const status = err.response?.status;
+
+                // 409 중복된 이메일 & 아이디 에러 처리
+                if (status === 409) {
+                    setError(err.response?.data.message);
+                    toast({
+                        variant: "destructive",
+                        title: "중복된 정보",
+                        description: error,
+                        action: <ToastAction altText="다시 시도">Try again</ToastAction>,
+                      });
+                    return;
+                }
+            }
+
         }
-    }
+    };
 
     return (
         <div className="w-full h-full flex flex-col gap-10">
@@ -70,25 +142,48 @@ export default function RegisterForm() {
             <Header title="Register" />
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
-                <div className="space-y-4">
+                <div className="flex flex-col justify-between gap-4">
                     {inputType.map((input, index) => (
                         <div key={index} className="flex flex-col gap-2">
-                            <label className="text-body1 text-grey450">{input.name}</label>
+                            <label className="flex items-center gap-8 text-body1 text-grey450">
+                                <span>{input.title}</span>
+                                {errors[input.name as keyof RegisterSchema] && (
+                                <p className="text-newRed text-sm">
+                                {errors[input.name as keyof RegisterSchema]?.message as string}
+                                </p>
+                            )}
+                            </label>
                             <input
-                                {...register("password", { required: true })}
-                                key={input.name}
+                                {...register(input.name as keyof RegisterSchema)}
                                 type={input.type}
-                                name={input.name}
                                 placeholder={input.placeholder}
-                                className="px-1 py-2 w-full border-b-2 border-grey550 bg-inherit focus:outline-none focus:ring-0 focus:border-white focus:placeholder-transparent "
+                                autoComplete="off"
+                                className="px-1 py-2 w-full text-grey450 border-b-2 border-grey550 bg-inherit focus:outline-none focus:ring-0 focus:border-white focus:placeholder-transparent "
                             />
+                            {/* 에러 메시지 */}
+                            
                         </div>
                     ))}
                     <div className="flex flex-col gap-2">
-                        <label className="text-body1 text-grey450">Team / Part</label>
+                        <label className="flex items-center gap-8 text-body1 text-grey450">
+                            <span>Team / Part</span>
+                            {errors[teamField.name as keyof RegisterSchema] && (
+                                <p className="text-newRed text-sm">
+                                {errors[teamField.name as keyof RegisterSchema]?.message as string}
+                                </p>
+                            )}
+                        </label>
                         <div className="relative flex gap-10">
-                            <SelectBox title={"Team"} placeholder={"Team"} items={selectItemTeam} />
-                            <SelectBox title={"Part"} placeholder={"Part"} items={selectItemPart} />
+                            <SelectBox
+                                value={teamField.value}
+                                onValueChange={teamField.onChange}
+                                placeholder={"Team"} items={selectItemTeam} />
+
+                            <SelectBox
+                                value={partField.value}
+                                onValueChange={partField.onChange}
+                                placeholder={"Part"} items={selectItemPart} />
+
                         </div>
                     </div>
                 </div>

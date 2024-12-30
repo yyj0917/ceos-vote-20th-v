@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 
 
@@ -23,12 +24,14 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard-dynamic-subset.css"
           crossOrigin="anonymous"
         />
+        
       </head>
       {/* 데스크탑 & 태블릿에서는 375px 고정, 모바일에서는 폰 화면에 따라 조정 */}
       <body className="h-[100vh] flex justify-center items-center  bg-white">
         <main className="min-w-[375px] max-w-[415px] lg:max-w-[375px] h-full bg-grey1000">
           {children}
         </main>
+        <Toaster/>
       </body>
     </html>
   );

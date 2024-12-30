@@ -3,6 +3,7 @@ import { Vote } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+// 로그인 전 홈화면
 
 export default function Home() {
   return (
@@ -14,12 +15,16 @@ export default function Home() {
         </h1>
       </span>
       <section className='w-full flex flex-col gap-4'>
-        <Button variant={'primary'} className='w-full text-grey350 hover:bg-grey850'>
-          <Link href='/login' className='w-full'>Join us</Link>
-        </Button>
-        <Button variant={'link'} className='w-full mt-2 text-grey350 underline underline-offset-4'>
-          <Link href='/register' className='w-full'>Sign up as a member</Link>
-        </Button>
+        <Link href='/login' className='w-full'>
+          <Button variant={'primary'} className='w-full text-grey350 hover:bg-grey850'>
+            Join us
+          </Button>
+        </Link>
+        <Link href='/register' className='w-full'>
+          <Button variant={'link'} className='w-full mt-2 text-grey350 underline underline-offset-4'>
+            Sign up as a member
+          </Button>
+        </Link>
       </section>
     </div>
   );

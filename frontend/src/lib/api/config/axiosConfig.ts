@@ -8,19 +8,17 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 1000,
 });
 
 // 요청(request) 인터셉터
 axiosInstance.interceptors.request.use(
   (config) => {
-    if (config.url?.includes("/register")) {
-        return config;
-      }
     // localStorage에서 토큰 가져오기
-    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+    const token = localStorage.getItem("accessToken");
     if (token && config.headers) {
       // 헤더에 담아서 보낸다 (Bearer 방식 가정)
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers["access"] = token; // access 헤더에 토큰 추가
     }
     return config;
   },

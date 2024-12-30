@@ -57,7 +57,6 @@ export default function LoginForm() {
             setAuth(localStorage.getItem("accessToken") as string);
             router.push("/main");
         } catch (err) {
-            console.error(err);
             setError("에러가 발생했습니다. 다시 시도해주세요.");
         }
     };

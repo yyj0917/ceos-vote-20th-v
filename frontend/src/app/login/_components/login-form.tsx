@@ -7,6 +7,8 @@ import { Button } from "@/components/button"
 import { LoginSchema, loginSchema } from "@/lib/zod/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoginAPI } from "@/lib/api/auth"
+import { useAuthStore } from "@/lib/zustand/useAuthStore"
+import { useRouter } from "next/navigation"
 
 interface FormValues {
   name: string
@@ -19,7 +21,7 @@ export default function LoginForm() {
     const inputType = [
         {
             type: "text",
-            name: "username",
+            name: "loginId",
             placeholder: "Enter your ID",
             title: "ID",
         },
@@ -30,8 +32,9 @@ export default function LoginForm() {
             title: "Password",
         },
     ];
-    
+    const { setAuth } = useAuthStore();
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
     // React Hook Form - zodResolver
     const {
         register,
@@ -46,10 +49,13 @@ export default function LoginForm() {
     // 폼 제출 시 호출
     const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
         try {
-            const response = await LoginAPI(data.username, data.password);
+            const response = await LoginAPI(data.loginId, data.password);
             setError(null);
             reset();
             // /main 다이렉트 이동 로직
+            alert("로그인 성공");
+            setAuth(localStorage.getItem("accessToken") as string);
+            router.push("/main");
         } catch (err) {
             console.error(err);
             setError("에러가 발생했습니다. 다시 시도해주세요.");

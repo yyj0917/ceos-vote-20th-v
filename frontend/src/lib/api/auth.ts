@@ -2,6 +2,8 @@
 
 import axios from "axios";
 import axiosInstance from "./config/axiosConfig";
+import { useAuthStore } from "../zustand/useAuthStore";
+import { set } from "react-hook-form";
 
 // 회원가입 API
 // (중복 체크는 별도 API로 할 수도, 여기서 에러를 받아 처리할 수도 있음)
@@ -40,30 +42,27 @@ export async function RegisterAPI({
 
 // 로그인 API
 // 백엔드가 "POST /api/login" 형식으로 토큰을 내려준다고 가정
-export async function LoginAPI(username: string, password: string) {
-  const res = await axios.post("http://43.201.23.26:80/api/login", {
-    username,
-    password,
-  }, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    timeout : 1000,
-  });
+export async function LoginAPI(loginId: string, password: string) {
+    const res = await axios.post("http://43.201.23.26:80/api/login", {
+        loginId,
+        password,
+    }, {
+        headers: {
+        "Content-Type": "application/json",
+        },
+        timeout : 1000,
+    });
 
-  // 예: 응답에서 액세스 토큰을 꺼낸다
-  console.log(res.headers)
-  const { access } = res.headers["authorization"];
-  console.log(access)
+    // res.headers access 토큰 받기
+    const access = res.headers["access"];
 
-  
 
-  // 로컬 스토리지에 저장(문자열로)
-  if (typeof window !== "undefined") {
-    localStorage.setItem("accessToken", access);
-  }
+    // 로컬 스토리지에 저장(문자열로)
+    if (typeof window !== "undefined") {
+        localStorage.setItem("accessToken", access);
+    }
 
-  return res.data; // 필요하면 return { accessToken, ... } 형태
+    return res.data; 
 }
 
 // 로그아웃 API (Optional)

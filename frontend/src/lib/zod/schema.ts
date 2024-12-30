@@ -27,7 +27,7 @@ export type RegisterSchema = z.infer<typeof registerSchema>;
 // 로그인 폼 스키마
 export const loginSchema = z
     .object({
-        username: z.string().nonempty("ID를 입력하세요."),
+        loginId: z.string().nonempty("ID를 입력하세요."),
         password: z.string().nonempty("비밀번호를 입력하세요."),
     });
 

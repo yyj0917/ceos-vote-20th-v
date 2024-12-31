@@ -116,7 +116,7 @@ export default function Step2() {
                         </div>
                         ))}
                     </div>
-                    <AlertSubmit handleSubmit={handleSubmit} />
+                    <AlertSubmit handleSubmit={handleSubmit} voteCategory="데모데이" />
                 </>
             )}
         </div>

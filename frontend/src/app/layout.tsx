@@ -28,7 +28,7 @@ export default function RootLayout({
       </head>
       {/* 데스크탑 & 태블릿에서는 375px 고정, 모바일에서는 폰 화면에 따라 조정 */}
       <body className="h-[100vh] flex justify-center items-center  bg-white">
-        <main className="min-w-[375px] max-w-[415px] lg:max-w-[375px] h-full bg-grey1000">
+        <main className="min-w-[375px] max-w-[415px] max-h-[812px] lg:max-w-[375px] h-full bg-grey1000 rounded-lg">
           {children}
         </main>
         <Toaster/>

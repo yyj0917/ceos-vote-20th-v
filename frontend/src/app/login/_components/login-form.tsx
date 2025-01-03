@@ -1,21 +1,21 @@
 "use client"
 
-import React, { useState } from "react"
+import { useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
+
 import Header from "@/components/header"
 import { Button } from "@/components/button"
-import { LoginSchema, loginSchema } from "@/lib/zod/schema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { LoginAPI } from "@/lib/api/auth"
-import { useAuthStore } from "@/lib/zustand/useAuthStore"
-import { useRouter } from "next/navigation"
 
-interface FormValues {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
-}
+import { zodResolver } from "@hookform/resolvers/zod"
+
+import { LoginAPI } from "@/lib/api/auth"
+import { LoginSchema, loginSchema } from "@/lib/zod/schema"
+import { useAuthStore } from "@/lib/zustand/useAuthStore"
+
+import { useRouter } from "next/navigation"
+import { toast } from "@/hooks/use-toast"
+import { ToastAction } from "@radix-ui/react-toast"
+
 
 export default function LoginForm() {
     const inputType = [
@@ -35,6 +35,7 @@ export default function LoginForm() {
     const { setAuth } = useAuthStore();
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+
     // React Hook Form - zodResolver
     const {
         register,
@@ -49,15 +50,21 @@ export default function LoginForm() {
     // 폼 제출 시 호출
     const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
         try {
-            const response = await LoginAPI(data.loginId, data.password);
+            await LoginAPI(data.loginId, data.password);
             setError(null);
+            // FormValue init
             reset();
-            // /main 다이렉트 이동 로직
             alert("로그인 성공");
             setAuth(localStorage.getItem("accessToken") as string);
             router.push("/main");
         } catch (err) {
             setError("에러가 발생했습니다. 다시 시도해주세요.");
+            toast({
+                variant: "destructive",
+                title: "오류 발생",
+                description: error,
+                action: <ToastAction altText="다시 시도">Try again</ToastAction>,
+            });
         }
     };
 

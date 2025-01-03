@@ -37,9 +37,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, asChild = false, href, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
 
-    // active function
-
-
     return <Comp 
             className={cn(buttonVariants({ variant, className }),
             )} ref={ref} {...props} />;

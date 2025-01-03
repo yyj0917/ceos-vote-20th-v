@@ -14,8 +14,8 @@ const axiosInstance = axios.create({
 // 요청(request) 인터셉터
 axiosInstance.interceptors.request.use(
   (config) => {
-    // localStorage에서 토큰 가져오기
-    const token = localStorage.getItem("accessToken");
+    // localStorage에서 토큰 가져오기 - 브라우저 환경 체크.
+    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
     if (token && config.headers) {
       // 헤더에 담아서 보낸다 (Bearer 방식 가정)
       config.headers["access"] = token; // access 헤더에 토큰 추가
@@ -27,13 +27,12 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// 응답(response) 인터셉터 (필요하다면)
+// 응답(response) 인터셉
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
-    // 예: 토큰 만료 시 로직, 에러 공통 처리 등
     return Promise.reject(error);
   }
 );

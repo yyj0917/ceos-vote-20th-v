@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+// 유효성 검사용 스키마
+
 // 회원가입 폼 스키마
 export const registerSchema = z
   .object({

@@ -27,7 +27,7 @@ export default function Step2() {
                 setBackList(res.data);
                 console.log(res.data);
             } else {
-                throw new Error("안댐댐")
+                throw new Error("Invalid data format")
             }
         }
         catch(err){
@@ -41,12 +41,9 @@ export default function Step2() {
     // 투표할 백엔드원 선택하기
     const handleVote = (backName: string) => {
         if (backName === selectedBack) {
-            // 같은 사람을 한번 더 클릭한 경우
             setselectedBack("")
-            console.log("선택된 사람: " + selectedBack); // 디버깅용
         } else {
             setselectedBack(backName);
-            console.log("선택된 사람: " + selectedBack); // 디버깅용
         }
     };
 
@@ -116,7 +113,7 @@ export default function Step2() {
             if (timer) {
                 clearTimeout(timer)
             };
-            setIsLoading(false);
+            // setIsLoading(false);
         };
     }, [isLoading]);
 

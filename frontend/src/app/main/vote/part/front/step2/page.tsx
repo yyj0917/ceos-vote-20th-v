@@ -1,16 +1,37 @@
 "use client";
 
 import { AlertSubmit } from "@/app/main/_components/alert-submit";
-import { Heart } from "lucide-react";
+import { Eraser, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import "../../../../_components/spinner.css"; // CSS 파일 가져오기
 import { useRouter } from "next/navigation";
+import { getPartList } from "@/lib/api/vote-part";
 
 export default function Step2() {
     const front = ["강다혜", "김류원", "권혜인", "박지수", "송유선", "이가빈", "이희원", "윤영준", "지민재", "최지원"];
     const [selectedFront, setselectedFront] = useState("");
+    const [frontList, setFrontList] = useState<string[]>([]); // API 사용해서 불러오기
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useRouter();
+    const router = useRouter();
+
+    // 프론트 리스트 가져오기
+    const getFront = async () => {
+        try{
+            const res = await getPartList("FRONT");
+            if (Array.isArray(res.data)){
+                setFrontList(res.data);
+                console.log(res.data);
+            } else {
+                throw new Error("안댐댐")
+            }
+        }
+        catch(err){
+        }
+    }
+
+    useEffect(() => {
+        getFront();
+    }, []);
 
     const handleVote = (frontName: string) => {
         if (frontName === selectedFront) {
@@ -30,7 +51,7 @@ export default function Step2() {
         if (isLoading) {
             // 로딩 상태가 true가 된 시점에만 타이머를 등록
             timer = setTimeout(() => {
-                navigate.push("/main/vote/part/front/step3");
+                router.push("/main/vote/part/front/step3");
           }, 3000);
         }
         // 컴포넌트 언마운트나 isLoading이 false로 바뀔 때 타이머 정리

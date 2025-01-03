@@ -1,26 +1,30 @@
 "use client";
 
-import { AlertSubmit } from "@/app/main/_components/alert-submit";
-import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
-import "../../../_components/spinner.css"; // CSS 파일 가져오기
 import { useRouter } from "next/navigation";
+
+import { AlertSubmit } from "@/app/main/_components/alert-submit";
 import { getTeamList, postTeamVote } from "@/lib/api/vote-demoday";
 import axios from "axios";
+
 import { toast } from "@/hooks/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
 
+import { Heart } from "lucide-react";
+import "../../../_components/spinner.css";
+
 
 export default function Step2() {
-    const [selectedTeam, setSelectedTeam] = useState("");
-    const [ teamList, setTeamList ] = useState<string[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useRouter();
+    const [selectedTeam, setSelectedTeam] = useState<string>("");
+    const [teamList, setTeamList] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const router = useRouter();
 
     // 팀 리스트 가져오기
     const getTeam = async () => {
         try {
             const res = await getTeamList();
+            // 팀 리스트가 배열 형태로 오는지 확인
             if (Array.isArray(res.data)) {
                 setTeamList(res.data);
             } else {
@@ -30,6 +34,7 @@ export default function Step2() {
         catch (err) {
         }
     }
+
     useEffect(() => {
         getTeam();
     }, []);
@@ -55,7 +60,7 @@ export default function Step2() {
         }
         try {
             // api 요청 로직
-            const res = await postTeamVote(selectedTeam);
+            await postTeamVote(selectedTeam);
             setIsLoading(true);
             return;
         }
@@ -63,7 +68,7 @@ export default function Step2() {
             if (axios.isAxiosError(err)) {
                 const status = err.response?.status;
 
-                // 409 재투표 에러처리
+                // 409 재투표 에러처리 - priority
                 if (status === 409) {
                     toast({
                         variant: "destructive",
@@ -99,13 +104,13 @@ export default function Step2() {
         if (isLoading) {
             // 로딩 상태가 true가 된 시점에만 타이머를 등록
             timer = setTimeout(() => {
-                navigate.push("/main/vote/demoday/step3");
+                router.push("/main/vote/demoday/step3");
           }, 3000);
         }
         // 컴포넌트 언마운트나 isLoading이 false로 바뀔 때 타이머 정리
         return () => {
-          if (timer) {
-            clearTimeout(timer)
+            if (timer) {
+                clearTimeout(timer)
             };
             setIsLoading(false);
         };

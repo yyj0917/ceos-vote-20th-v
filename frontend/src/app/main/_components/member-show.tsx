@@ -3,8 +3,15 @@
 import { getMemberProfile } from "@/lib/api/member";
 import { useEffect, useState } from "react"
 
+type MemberType = {
+    loginId: string;
+    username: string;
+    part: string;
+    team: string;
+};
+
 export default function MemberShow() {
-    const [memberData, setMemberData] = useState<any>(null);
+    const [memberData, setMemberData] = useState<MemberType>();
 
     useEffect(() => {
         handleMemberShow();

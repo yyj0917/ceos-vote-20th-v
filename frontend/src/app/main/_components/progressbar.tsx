@@ -1,14 +1,12 @@
 "use client"
 
-import * as React from "react"
-
+import { useEffect, useState } from "react"
 import { Progress } from "@/components/ui/progress"
-import { set } from "react-hook-form"
 
 export function ProgressBar({ value }: { value: number }) {
-  const [progress, setProgress] = React.useState(33)
+  const [progress, setProgress] = useState(33)
 
-  React.useEffect(() => {
+  useEffect(() => {
     setProgress(value);
   }, [])
 

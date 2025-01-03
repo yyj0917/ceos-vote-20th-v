@@ -1,8 +1,8 @@
 "use client"
 
-import { House, Menu, Undo2, UserRoundPen } from "lucide-react"
+import { House, Undo2, UserRoundPen } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -31,8 +31,6 @@ export default function NavigationBar() {
     useEffect(() => {
         setToken(localStorage.getItem("accessToken"));
     }, []);
-
-
 
     const modalArr = [
         {

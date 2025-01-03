@@ -19,6 +19,10 @@ export default function Step2() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
+    useEffect(() => {
+        console.log("isLoading 상태 변경:", isLoading);
+    }, [isLoading]);
+    
     // 프론트 리스트 가져오기
     const getFront = async () => {
         try{
@@ -27,7 +31,7 @@ export default function Step2() {
                 setFrontList(res.data);
                 console.log(res.data);
             } else {
-                throw new Error("안댐댐")
+                throw new Error("Invalid data format")
             }
         }
         catch(err){
@@ -41,12 +45,9 @@ export default function Step2() {
     // 투표할 프론트원 선택하기
     const handleVote = (frontName: string) => {
         if (frontName === selectedFront) {
-            // 같은 사람을 한번 더 클릭한 경우
             setselectedFront("")
-            console.log("선택된 사람: " + selectedFront); // 디버깅용
         } else {
             setselectedFront(frontName);
-            console.log("선택된 사람: " + selectedFront); // 디버깅용
         }
     };
 
@@ -65,7 +66,7 @@ export default function Step2() {
             // api 요청 로직
             await postPartVote("FRONT", selectedFront);
             setIsLoading(true);
-            console.log(selectedFront + "투표 API 호출"); // 디버깅용
+            console.log(selectedFront + "투표 API 호출 / IsLoading: " + isLoading); // 디버깅용
             return;
         }
         catch (err) {
@@ -109,6 +110,7 @@ export default function Step2() {
             // 로딩 상태가 true가 된 시점에만 타이머를 등록
             timer = setTimeout(() => {
                 router.push("/main/vote/part/front/step3");
+                console.log("라우터 호출");
             }, 3000);
         }
         // 컴포넌트 언마운트나 isLoading이 false로 바뀔 때 타이머 정리
@@ -116,7 +118,7 @@ export default function Step2() {
             if (timer) {
                 clearTimeout(timer)
             };
-            setIsLoading(false);
+            // setIsLoading(false); 타이머만 정리하도록 => 에러수정
         };
     }, [isLoading]);
 
@@ -144,8 +146,8 @@ export default function Step2() {
                             />
                         </div>
                         ))}
-                        <AlertSubmit handleSubmit={handleSubmit} voteCategory="프론트엔드 파트장" />
                     </div>
+                    <AlertSubmit handleSubmit={handleSubmit} voteCategory="프론트엔드 파트장" />
                 </>
             )}
         </div>

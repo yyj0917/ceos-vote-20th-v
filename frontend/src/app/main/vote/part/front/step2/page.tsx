@@ -48,7 +48,7 @@ export default function Step2() {
                 <div className="loader"></div>
             ) : (
                 <>
-                    <div className="w-full space-y-4 overflow-y-auto">
+                    <div className="w-full space-y-4 overflow-y-auto scrollbar-hide">
                         {front.map((front, index) => (
                         <div
                             key={index}

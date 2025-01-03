@@ -1,9 +1,8 @@
 // src/lib/api/auth.ts
 
 import axios from "axios";
-import axiosInstance from "./config/axiosConfig";
-import { useAuthStore } from "../zustand/useAuthStore";
-import { set } from "react-hook-form";
+
+const baseURL = "http://43.201.23.26:80";
 
 // 회원가입 API
 // (중복 체크는 별도 API로 할 수도, 여기서 에러를 받아 처리할 수도 있음)
@@ -23,7 +22,7 @@ export async function RegisterAPI({
   team: string;
 }) {
   // 백엔드가 요구하는 엔드포인트 (/api/signup 등)와 요청 형식에 맞춰 전송
-  const res = await axios.post("http://43.201.23.26:80/api/auth", {
+  const res = await axios.post(`${baseURL}/api/auth`, {
     loginId,
     password,
     email,
@@ -43,7 +42,7 @@ export async function RegisterAPI({
 // 로그인 API
 // 백엔드가 "POST /api/login" 형식으로 토큰을 내려준다고 가정
 export async function LoginAPI(loginId: string, password: string) {
-    const res = await axios.post("http://43.201.23.26:80/api/login", {
+    const res = await axios.post(`${baseURL}/api/login`, {
         loginId,
         password,
     }, {

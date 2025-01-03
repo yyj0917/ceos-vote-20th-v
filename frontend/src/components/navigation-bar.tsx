@@ -23,9 +23,14 @@ type MemberInfo = {
 
 export default function NavigationBar() {
     const router = useRouter()
-    const token = localStorage.getItem("accessToken");
+    const [ token, setToken ] = useState<string | null>(null);
     const [memberInfo, setMemberInfo] = useState<MemberInfo>();
     const { logout } = useAuthStore();
+
+    // hydration error 방지
+    useEffect(() => {
+        setToken(localStorage.getItem("accessToken"));
+    }, []);
 
 
 

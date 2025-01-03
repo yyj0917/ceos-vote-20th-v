@@ -1,7 +1,5 @@
-import Header from "@/components/header";
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import { AlertResult } from "../../_components/alert-result";
 
 
 export default function DemoDay() {
@@ -13,7 +11,6 @@ export default function DemoDay() {
                     <Heart size={36} className="hover:text-newRed"/>
                 </Link>
             </div>
-            {/* <AlertResult/> */}
         </div>
     )
 }

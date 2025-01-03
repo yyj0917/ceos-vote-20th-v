@@ -15,7 +15,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // localStorage에서 토큰 가져오기
-    const token = localStorage.getItem("accessToken");
+    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
     if (token && config.headers) {
       // 헤더에 담아서 보낸다 (Bearer 방식 가정)
       config.headers["access"] = token; // access 헤더에 토큰 추가

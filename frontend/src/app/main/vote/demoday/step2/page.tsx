@@ -21,7 +21,11 @@ export default function Step2() {
     const getTeam = async () => {
         try {
             const res = await getTeamList();
-            setTeamList(res.data);
+            if (Array.isArray(res.data)) {
+                setTeamList(res.data);
+            } else {
+                throw new Error("Invalid data format");
+            }
         }
         catch (err) {
         }
@@ -40,6 +44,15 @@ export default function Step2() {
     };
     // 투표 제출
     const handleSubmit = async () => {     
+        if (!selectedTeam) {
+            toast({
+                variant: "destructive",
+                title: "팀 선택 오류",
+                description: "팀을 선택해주세요.",
+                action: <ToastAction altText="다시 시도">Try again</ToastAction>,
+            });
+            return;
+        }
         try {
             // api 요청 로직
             const res = await postTeamVote(selectedTeam);
@@ -71,6 +84,13 @@ export default function Step2() {
                     return;
                 }
             }   
+            // 기타 에러 처리
+            toast({
+                variant: "destructive",
+                title: "오류 발생",
+                description: "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.",
+                action: <ToastAction altText="다시 시도">Try again</ToastAction>,
+            });
         }
     }
     // loading spinner animation
@@ -86,8 +106,8 @@ export default function Step2() {
         return () => {
           if (timer) {
             clearTimeout(timer)
+            };
             setIsLoading(false);
-          };
         };
       }, [isLoading]);
 

@@ -83,7 +83,7 @@ type AuthState = {
 // `persist`를 적용한 Zustand 스토어 생성
 export const useAuthStore = create(
   persist<AuthState>(
-    (set, get) => ({
+    (set) => ({
       token: null,
       isAuthenticated: false,
     //   memberInfo: null,

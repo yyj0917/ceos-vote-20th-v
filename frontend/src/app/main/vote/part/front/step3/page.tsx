@@ -5,19 +5,41 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 
+import { getPartVoteResult } from "@/lib/api/vote-part";
+
+type FrontVote = {
+    name: string;
+    team: string;
+    votes: number;
+  };
+
 export default function Step3() {
-    // const [teamData, setTeamData] = useState<TeamVote[]>([]);
-
-    const front = ["강다혜", "김류원", "권혜인", "박지수", "송유선", "이가빈", "이희원", "윤영준", "지민재", "최지원"];
+    const [PartData, setPartData] = useState<FrontVote[]>([]);
     const [winnerFront, setWinnerFront] = useState("MUSAI");
-    // const [isVisible, setIsVisible] = useState(false);
-    const navigate = useRouter();
 
+  const navigate = useRouter();
+  
+  const handleVoteResult = async () => {
+    try {
+      // api 요청 로직
+      const res = await getPartVoteResult("FRONT");
+      setPartData(res.data);
+      setWinnerFront(res.data[0].name);
+      console.log(res.data);
+      return;
+    }
+    catch (err) {
+    }
+  }
     const handleGoOtherVote = () => {
         console.log("다른투표 버튼 클릭");
         navigate.push("/main/vote");
     }
 
+    useEffect(() => {
+      handleVoteResult();
+    }, []);
+  
     useEffect(() => {
         const end = Date.now() + 1.5 * 1000; // 15초 동안 실행
         const colors = ["#bb0000", "#ffffff"]; // 축제 색상
@@ -45,21 +67,21 @@ export default function Step3() {
       }, []);
       
     return (
-        <div className="w-full h-[90%] flex flex-col justify-center items-center gap-10">
+        <div className="w-full h-[90%] flex flex-col justify-center items-center gap-7">
 
-            <div className="w-full space-y-4">
-                {front.map((front, index) => {
+            <div className="w-full space-y-4 overflow-y-auto scrollbar-hide">
+                {PartData.map((front, index) => {
                 // 우승 팀 여부
-                const isWinner = front === winnerFront;
+                const isWinner = front?.name === winnerFront;
 
                 return (
                     <div
                     key={index}
                     className="px-10 py-4 w-full flex justify-between items-center text-head1 text-grey450 border-b-2 border-newRed"
                     >
-                    <div className="relative flex items-center gap-2">
-                        <h1>{front}</h1>
-                        {/* 우승 팀이면 왕관 아이콘 표시 */}
+                    <div className="relative flex items-center gap-">
+                        <h1>{front?.name}</h1>
+                        {/* 우승 파트장이면 왕관 아이콘 표시 */}
                         {isWinner && (
                         <Crown
                             size={28}
@@ -70,7 +92,9 @@ export default function Step3() {
                     </div>
 
                     {/* 투표 수 표시 예시 */}
-                    <p className="w-8 h-8 flex justify-center items-center bg-newRed rounded-full text-head0 text-white">3</p>
+                    <p className="w-8 h-8 flex justify-center items-center bg-newRed rounded-full text-head0 text-white">
+                      {front?.votes}
+                    </p>
                     </div>
                 );
                 })}

@@ -18,7 +18,7 @@ export default function PartLayout({
   useEffect(() => {
     // pathname에 따라 진행도 결정
     if (pathname === "/main/vote/part") {
-        setProgress(33);
+        setProgress(0);
     } else if (pathname === "/main/vote/part/front/step2") {
         setProgress(66);
     } else if (pathname === "/main/vote/part/front/step3") {
@@ -43,7 +43,7 @@ export default function PartLayout({
             {/* 진행 바 */}
             <Progress value={progress} className="w-[90%] bg-grey450" />
         </div>
-        <div className="w-full h-[80%]">
+        <div className="w-full h-[75%]">
             {children}
         </div>
     </div>

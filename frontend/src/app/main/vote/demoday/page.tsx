@@ -1,7 +1,6 @@
-import Header from "@/components/header";
+import { Button } from "@/components/button";
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import { AlertResult } from "../../_components/alert-result";
 
 
 export default function DemoDay() {
@@ -13,7 +12,11 @@ export default function DemoDay() {
                     <Heart size={36} className="hover:text-newRed"/>
                 </Link>
             </div>
-            {/* <AlertResult/> */}
+            <Link href="/main/vote/demoday/step3">
+                <Button variant="primary" className=" rounded-sm bg-newRed text-grey150">
+                    결과 확인하기
+                </Button>
+            </Link>
         </div>
     )
 }

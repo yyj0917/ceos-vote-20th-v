@@ -16,7 +16,7 @@ import {
     voteCategory: string
     }
   
-  export function AlertSubmit({handleSubmit, voteCategory} : AlertSubmitProps) {
+export function AlertSubmit({handleSubmit, voteCategory} : AlertSubmitProps) {
     return (
       <AlertDialog>
         <AlertDialogTrigger asChild>

@@ -3,21 +3,65 @@ import { GoOtherVote } from "@/app/main/_components/alert-goOtherVote";
 import { Crown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
 import confetti from "canvas-confetti";
 
+import { getPartVoteResult } from "@/lib/api/vote-part";
+
+type BackVote = {
+    name: string;
+    team: string;
+    votes: number;
+  };
+
 export default function Step3() {
-    // const [teamData, setTeamData] = useState<TeamVote[]>([]);
+  const [PartData, setPartData] = useState<BackVote[]>([]);
+  const [winnerBack, setWinnerBack] = useState("MUSAI");
+  const navigate = useRouter();
 
-    const back = ["김연수", "이채원", "이한슬", "최서지", "유지민", "남승현", "나혜인", "문서영", "임가현", "황서아"];
-    const [winnerFront, setWinnerFront] = useState("MUSAI");
-    // const [isVisible, setIsVisible] = useState(false);
-    const navigate = useRouter();
+  const handleVoteResult = async () => {
+    try {
+      // api 요청 로직
+      const res = await getPartVoteResult("BACK");
+      setPartData(res.data);
+      setWinnerBack(res.data[0].name);
+      console.log(res.data);
+      return;
+    }
+    catch (err) {
+      if (axios.isAxiosError(err)) {
+                const status = err.response?.status;
 
+                // 409 재투표 에러처리 - priority
+                if (status === 404) {
+                    toast({
+                        variant: "destructive",
+                        title: "결과 조회 실패",
+                        description: err.response?.data.message,
+                        action: <ToastAction altText="다시 시도">Try again</ToastAction>,
+                      });
+                    return;
+                }
+            }
+            toast({
+                variant: "destructive",
+                title: "오류 발생",
+                description: "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.",
+                action: <ToastAction altText="다시 시도">Try again</ToastAction>,
+            });
+        }
+  }
     const handleGoOtherVote = () => {
         console.log("다른투표 버튼 클릭");
         navigate.push("/main/vote");
     }
 
+    useEffect(() => {
+      handleVoteResult();
+    }, []);
+  
     useEffect(() => {
         const end = Date.now() + 1.5 * 1000; // 15초 동안 실행
         const colors = ["#bb0000", "#ffffff"]; // 축제 색상
@@ -45,32 +89,34 @@ export default function Step3() {
       }, []);
       
     return (
-        <div className="w-full h-[90%] flex flex-col justify-center items-center gap-10">
+        <div className="w-full h-[90%] flex flex-col justify-center items-center gap-7">
 
-            <div className="w-full space-y-4">
-                {back.map((back, index) => {
+            <div className="w-full space-y-4 overflow-y-auto scrollbar-hide">
+                {PartData.map((back, index) => {
                 // 우승 팀 여부
-                const isWinner = back === winnerFront;
+                const isWinner = back?.name === winnerBack;
 
                 return (
                     <div
                     key={index}
                     className="px-10 py-4 w-full flex justify-between items-center text-head1 text-grey450 border-b-2 border-newRed"
                     >
-                    <div className="relative flex items-center gap-2">
-                        <h1>{back}</h1>
-                        {/* 우승 팀이면 왕관 아이콘 표시 */}
+                    <div className="relative flex items-center gap-">
+                        <h1>{back?.name}</h1>
+                        {/* 우승 파트장이면 왕관 아이콘 표시 */}
                         {isWinner && (
                         <Crown
                             size={28}
-                            className="absolute left-[-35%] bottom-6 text-newRed" 
+                            className="absolute left-[-65%] bottom-2 text-newRed" 
                             style={{ transform: "rotate(-25deg)" }}
                         />
                         )}
                     </div>
 
                     {/* 투표 수 표시 예시 */}
-                    <p className="w-8 h-8 flex justify-center items-center bg-newRed rounded-full text-head0 text-white">3</p>
+                    <p className="w-8 h-8 flex justify-center items-center bg-newRed rounded-full text-head0 text-white">
+                      {back?.votes}
+                    </p>
                     </div>
                 );
                 })}

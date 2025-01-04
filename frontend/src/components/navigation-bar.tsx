@@ -1,8 +1,8 @@
 "use client"
 
-import { House, Menu, Undo2, UserRoundPen } from "lucide-react"
+import { House, Undo2, UserRoundPen } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,11 +23,14 @@ type MemberInfo = {
 
 export default function NavigationBar() {
     const router = useRouter()
-    const token = localStorage.getItem("accessToken");
+    const [ token, setToken ] = useState<string | null>(null);
     const [memberInfo, setMemberInfo] = useState<MemberInfo>();
     const { logout } = useAuthStore();
 
-
+    // hydration error 방지
+    useEffect(() => {
+        setToken(localStorage.getItem("accessToken"));
+    }, []);
 
     const modalArr = [
         {

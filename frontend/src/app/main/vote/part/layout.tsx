@@ -43,7 +43,7 @@ export default function PartLayout({
             {/* 진행 바 */}
             <Progress value={progress} className="w-[90%] bg-grey450" />
         </div>
-        <div className="w-full h-[80%]">
+        <div className="w-full h-[75%]">
             {children}
         </div>
     </div>

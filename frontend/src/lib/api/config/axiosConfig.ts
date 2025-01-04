@@ -4,7 +4,7 @@ import axios from "axios";
 
 // axios 인스턴스 생성
 const axiosInstance = axios.create({
-  baseURL: "http://43.201.23.26:80",
+  baseURL: "https://musai-server.store",
   headers: {
     "Content-Type": "application/json",
   },

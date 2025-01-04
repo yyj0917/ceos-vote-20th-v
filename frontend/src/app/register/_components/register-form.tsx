@@ -53,16 +53,6 @@ export default function RegisterForm() {
     const [error, setError] = useState<string | null>(null);
     const { toast } = useToast(); // useToast 훅 사용
 
-    // useEffect(() => {
-    //     if (error) {
-    //       toast({
-    //         variant: "destructive",
-    //         title: "Error",
-    //         description: error,
-    //         action: <ToastAction altText="Try again">{error}</ToastAction>,
-    //       });
-    //     }
-    //   }, [error, toast]);
 
     // React Hook Form - zodResolver
     const {

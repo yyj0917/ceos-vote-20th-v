@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-const baseURL = "http://43.201.23.26:80";
+const baseURL = "https://musai-server.store";
 
 // 회원가입 API
 // (중복 체크는 별도 API로 할 수도, 여기서 에러를 받아 처리할 수도 있음)
